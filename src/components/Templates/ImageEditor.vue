@@ -5,9 +5,9 @@
         Brightness and Contrast Editor
     </div>
     <div>
-        <img src="../assets/pleasure-garden.jpg">
+        <img src="../../assets/pleasure-garden.jpg">
         <div class="avatar">
-            <img src="../assets/my-face.png">
+            <img src="../../assets/my-face.png">
         </div>
     </div>
     <div class="panel panel-default">
@@ -37,11 +37,14 @@
 </template>
 
 <script>
-import Label from './components/Atoms/Label.vue'
+import Label from '../Atoms/Label.vue'
 
 
 export default {
   name: 'ImageEditor',
+  components: {
+    Label
+  },
   props: ['id','width','height'],
   data () {
     return {
@@ -85,9 +88,7 @@ export default {
         var contrastValue = event.target.value
         console.log(contrastValue);
         var vm = this;
-        var newImageData = vm.pixelManipulation(vm.originalImgData, contrastValue);
-        console.log(newImageData)
-        // vm.ctx.putImageData(newImageData,0,0);
+        vm.pixelManipulation(vm.originalImgData, contrastValue);
     },
     triggerInput: function(event) {
       event.preventDefault();
