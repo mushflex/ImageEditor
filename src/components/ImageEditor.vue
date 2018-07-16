@@ -12,13 +12,13 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <input class="image-adjust__brightness" @change="adjustBrightness" type="range" min="-100" max="100" value="0">
+            <input class="image-adjust__brightness" @change="adjustBrightness" type="range" min="-100" max="100" value="0" :disabled="isImageLoaded === false">
             <p>Slide to adjust image brightness</p>
         </div>     
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <input class="image-adjust__contrast" @change="adjustContrast" type="range" min="-100" max="100" value="0">
+            <input class="image-adjust__contrast" @change="adjustContrast" type="range" min="-100" max="100" value="0" :disabled="isImageLoaded === false">
             <p>Slide to adjust image brightness</p>
         </div>    
     </div>
@@ -80,7 +80,7 @@ export default {
         var vm = this;
         var newImageData = vm.pixelManipulation(vm.originalImgData, contrastValue);
         console.log(newImageData)
-        vm.ctx.putImageData(newImageData,0,0);
+        // vm.ctx.putImageData(newImageData,0,0);
     },
     adjustContrast(event){
         console.log("adjustContrast : "+event.target.value);
