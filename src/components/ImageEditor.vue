@@ -5,18 +5,20 @@
         Brightness and Contrast Editor
     </div>
     <div>
-        <img >
-        image with my face here
+        <img src="../assets/pleasure-garden.jpg">
+        <div class="avatar">
+            <img src="../assets/my-face.png">
+        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <input class="image-adjust__brightness" @change="adjustBrightness" type="range" min="1" max="100" value="50">
+            <input class="image-adjust__brightness" @change="adjustBrightness" type="range" min="-100" max="100" value="0">
             <p>Slide to adjust image brightness</p>
         </div>     
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <input class="image-adjust__contrast" @change="adjustContrast" type="range" min="1" max="100" value="50">
+            <input class="image-adjust__contrast" @change="adjustContrast" type="range" min="-100" max="100" value="0">
             <p>Slide to adjust image brightness</p>
         </div>    
     </div>
@@ -43,11 +45,10 @@ export default {
         selectedFile: null,
         isImageLoaded: false,
         // Image
-        ctx: null, canvas: null,
+        ctx: null, 
+        canvas: null,
         img: null, 
-        // Properties
-        imageContrast: 0, 
-        imageBrightness: 0,
+        originalImgData: null,
     }
   },
   mounted: function(){
@@ -57,15 +58,36 @@ export default {
     this.img = document.createElement("img");
   },
   methods: {
-    triggerInput: function(event) {
-      event.preventDefault();
-      this.$refs.fileInput.click();
+    
+    pixelManipulation(imageData, contrast) {  // contrast as an integer percent  
+        var data = imageData.data;  // original array modified, but canvas not updated
+        contrast *= 2.55; // or *= 255 / 100; scale integer percent to full range
+        var factor = (255 + contrast) / (255.01 - contrast);  //add .1 to avoid /0 error
+
+        for(var i=0;i<data.length;i+=4)  //pixel values in 4-byte blocks (r,g,b,a)
+        {
+            data[i] = factor * (data[i] - 128) + 128;     //r value
+            data[i+1] = factor * (data[i+1] - 128) + 128; //g value
+            data[i+2] = factor * (data[i+2] - 128) + 128; //b value
+
+        }
+        return imageData;
     },
+    
     adjustBrightness(event){
-        console.log(event.target.value);
+        var contrastValue = event.target.value
+        console.log(contrastValue);
+        var vm = this;
+        var newImageData = vm.pixelManipulation(vm.originalImgData, contrastValue);
+        console.log(newImageData)
+        vm.ctx.putImageData(newImageData,0,0);
     },
     adjustContrast(event){
         console.log("adjustContrast : "+event.target.value);
+    },
+    triggerInput: function(event) {
+      event.preventDefault();
+      this.$refs.fileInput.click();
     },
     onFileSelected(event){
         console.log('uploading...')
@@ -87,17 +109,7 @@ export default {
             // Draw
             vm.ctx.drawImage(vm.img, 0, 0, vm.img.width, vm.img.height, 
                 0, 0, vm.canvas.width, vm.canvas.height);
-
-            // // Grab position info
-            // vm.imageWidth = vm.img.width;
-            // vm.imageHeight = vm.img.height;
-            // vm.imageRight = vm.imageX + vm.imageWidth;
-            // vm.imageBottom = vm.imageY + vm.imageHeight
-            
-            // // Update CTX
-            // vm.draw(false);
-
-            // Notify component
+            vm.originalImgData = vm.ctx.getImageData(0, 0, vm.canvas.width, vm.canvas.height);
             vm.isImageLoaded = true;
             }
         }
@@ -111,10 +123,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+img {
+    width: 100%;
+}
+canvas {
+    width: 100%;
+}
+.avatar {
+    display: flex;
+    justify-content: center;
+    margin-top: -4rem;
+}
+.avatar img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border: 5px solid white;
+}
 div .img-editor{
-  display: flex;
-  align-self: auto;
-  flex-direction: column;
+    display: flex;
+    align-self: auto;
+    flex-direction: column;
+    width: 50%;
+    padding: 1rem;
 }
 
 .image-input__input {
