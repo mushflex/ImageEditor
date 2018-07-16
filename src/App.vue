@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ImageEditor from './components/ImageEditor.vue'
+import ImageEditor from './components/Templates/ImageEditor.vue'
 
 export default {
   name: 'app',

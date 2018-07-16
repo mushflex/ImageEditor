@@ -13,13 +13,13 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <input class="image-adjust__brightness" @change="adjustBrightness" type="range" min="-100" max="100" value="0" :disabled="isImageLoaded === false">
-            <p>Slide to adjust image brightness</p>
+            <Label description="Slide to adjust image brightness"/>
         </div>     
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
             <input class="image-adjust__contrast" @change="adjustContrast" type="range" min="-100" max="100" value="0" :disabled="isImageLoaded === false">
-            <p>Slide to adjust image brightness</p>
+            <Label description="Slide to adjust image contrast"/>
         </div>    
     </div>
     <div>
@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import Label from './components/Atoms/Label.vue'
+
+
 export default {
   name: 'ImageEditor',
   props: ['id','width','height'],
@@ -71,10 +74,14 @@ export default {
             data[i+2] = factor * (data[i+2] - 128) + 128; //b value
 
         }
-        return imageData;
     },
     
     adjustBrightness(event){
+        var vm = this;
+        var brightnessValue = event.target.value
+        console.log("brightness : "+event.target.value);
+    },
+    adjustContrast(event){
         var contrastValue = event.target.value
         console.log(contrastValue);
         var vm = this;
@@ -82,15 +89,11 @@ export default {
         console.log(newImageData)
         // vm.ctx.putImageData(newImageData,0,0);
     },
-    adjustContrast(event){
-        console.log("adjustContrast : "+event.target.value);
-    },
     triggerInput: function(event) {
       event.preventDefault();
       this.$refs.fileInput.click();
     },
     onFileSelected(event){
-        console.log('uploading...')
         var vm = this;
         var input = event.target;
 
