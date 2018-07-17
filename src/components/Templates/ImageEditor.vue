@@ -47,8 +47,15 @@
             v-bind:height="height"
             v-bind:width="width">
         </canvas> 
-        <div>
-            <button class="btn btn-primary" @click="triggerInput">Upload</button>
+        <div class="row canvas-input__upload">
+            <div class="list-group list-group-horizontal">
+                <div class="list-group-item">Name</div>
+                <div class="list-group-item truncate">{{filename}}</div>
+            </div>
+
+            <button class="btn btn-upload" @click="triggerInput">
+                Upload
+            </button>
             <input 
                 @change="onFileSelected" 
                 class="image-input__input" 
@@ -70,7 +77,7 @@ export default {
     Label,
     Header,
   },
-  props: ['id','width','height'],
+  props: ['id','width','height','filename'],
   data () {
     return {
         selectedFile: null,
@@ -87,6 +94,7 @@ export default {
     this.canvas = this.$refs.canvas;
     this.ctx = this.canvas.getContext("2d");
     this.img = document.createElement("img");
+    this.filename = 'No File';
   },
   methods: {
     copyImageData(){
@@ -137,6 +145,7 @@ export default {
 
         if (input.files && input.files[0]) {
             let reader = new FileReader();
+            let filename = input.files[0].name;
             reader.onload = function (e) {
                 vm.img.src = e.target.result;
             }
@@ -145,6 +154,7 @@ export default {
             vm.img.onload = function() {
                 vm.ctx.drawImage(vm.img, 0, 0, vm.img.width, vm.img.height, 
                     0, 0, vm.canvas.width, vm.canvas.height);
+                vm.filename = filename;
                 vm.originalImgData = vm.ctx.getImageData(0, 0, vm.canvas.width, vm.canvas.height);
                 vm.isImageLoaded = true;
             }
@@ -162,12 +172,47 @@ img {
 p {
     font-size: small;
 }
+.list-group {
+    display: flex;
+    flex-direction: row;
+    margin-left: 4px;
+}
+.list-group-horizontal .list-group-item {
+    display: inline-block;
+    margin-bottom: 0;
+	margin-left:-4px;
+	margin-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 36px;
+}
+.list-group-horizontal .list-group-item:first-child {
+	border-top-right-radius:0;
+	border-bottom-left-radius:4px;
+}
+.list-group-horizontal .list-group-item:last-child {
+	border-top-right-radius:4px;
+	border-bottom-left-radius:0;
+}
+.truncate {
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
+.btn-upload {
+    border: 1px solid #dcdcdc;
+}
 .canvas-input {
     border: 1px solid #b5a8a0;
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-radius: 5px;
     margin: 0.5rem;
+}
+.canvas-input__upload {
+    display: flex;
+    justify-content: space-around;
 }
 .avatar {
     display: flex;
@@ -184,7 +229,7 @@ div .img-editor{
     display: flex;
     align-self: auto;
     flex-direction: column;
-    width: 40%;
+    width: 375px;
 }
 
 .image-input__input {
@@ -192,16 +237,15 @@ div .img-editor{
 }
 .image-input__canvas {
     width: 100%;
+    border-bottom: 1px solid #b5a89f;
 }
 
 .image-input__overlay 
 {
     position: absolute;
     top: 0; left: 0;
-
     width: 100%;
     height: 100%;
-
     cursor: pointer;
 }
 .panel {
@@ -212,6 +256,7 @@ div .img-editor{
     border-radius: 5px;
     box-shadow: 3px 3px 15px #888888;
     padding-top: 0.5rem;
+    padding-bottom: 0.1rem;
 }
 .image-adjust__brightness {
     width: 80%;
