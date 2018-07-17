@@ -22,11 +22,11 @@
                 value="0" 
                 :disabled="isImageLoaded === false"
             />
-            <Label description="Slide to adjust image brightness"/>
+            <Label description="Slide to adjust image brightness!"/>
         </div>     
     </div>
     <div class="panel">
-        <div class="panel panel-body">
+        <div class="panel-body">
             <h4 class="contrast">Contrast</h4>
             <input 
                 class="image-adjust__contrast" 
@@ -37,10 +37,10 @@
                 value="0" 
                 :disabled="isImageLoaded === false"
             />
-            <Label description="Slide to adjust image contrast"/>
+            <Label description="Slide to adjust image contrast!"/>
         </div>    
     </div>
-    <div>
+    <div class="canvas-input">
         <canvas 
             class="image-input__canvas"
             ref="canvas"
@@ -159,8 +159,15 @@ export default {
 img {
     width: 100%;
 }
-canvas {
-    width: 100%;
+p {
+    font-size: small;
+}
+
+.canvas-input {
+    border: 1px solid #b5a8a0;
+    padding-bottom: 1rem;
+    border-radius: 5px;
+    margin: 0.5rem;
 }
 .avatar {
     display: flex;
@@ -184,7 +191,7 @@ div .img-editor{
     display: none;
 }
 .image-input__canvas {
-    border: 1px solid black;
+    width: 100%;
 }
 
 .image-input__overlay 
@@ -199,6 +206,12 @@ div .img-editor{
 }
 .panel {
     padding: 0.5rem;
+}
+.panel-body {
+    border: 1px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 15px #888888;
+    padding-top: 0.5rem;
 }
 .image-adjust__brightness {
     width: 80%;
