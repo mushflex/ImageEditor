@@ -10,8 +10,8 @@ import ImageEditor from './components/Templates/ImageEditor.vue'
 export default {
   name: 'app',
   components: {
-    ImageEditor
-  }
+    ImageEditor,
+  },
 }
 </script>
 

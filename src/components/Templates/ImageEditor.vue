@@ -10,7 +10,7 @@
             <img src="../../assets/my-face.png">
         </div>
     </div>
-    <div class="panel panel-default">
+    <div class="panel">
         <div class="panel-body">
             <h4 class="brightness">Brightness</h4>
             <input 
@@ -25,8 +25,8 @@
             <Label description="Slide to adjust image brightness"/>
         </div>     
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="panel">
+        <div class="panel panel-body">
             <h4 class="contrast">Contrast</h4>
             <input 
                 class="image-adjust__contrast" 
@@ -48,7 +48,7 @@
             v-bind:width="width">
         </canvas> 
         <div>
-            <button @click="triggerInput">Upload</button>
+            <button class="btn btn-primary" @click="triggerInput">Upload</button>
             <input 
                 @change="onFileSelected" 
                 class="image-input__input" 
@@ -152,8 +152,6 @@ export default {
     }
   }
 }
-
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -179,8 +177,7 @@ div .img-editor{
     display: flex;
     align-self: auto;
     flex-direction: column;
-    width: 50%;
-    padding: 1rem;
+    width: 40%;
 }
 
 .image-input__input {
