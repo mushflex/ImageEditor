@@ -12,6 +12,7 @@
     </div>
     <Slider 
         labelColor='brightness'
+        sliderStyles="image-adjust__input-brightness"
         label='Brightness'
         @sliderChangeFunc="adjustBrightness"
         :isImageLoaded="isImageLoaded"
@@ -19,6 +20,7 @@
     />
     <Slider 
         labelColor='contrast'
+        sliderStyles="image-adjust__input-contrast"
         label='Contrast'
         @sliderChangeFunc="adjustContrast"
         :isImageLoaded="isImageLoaded"

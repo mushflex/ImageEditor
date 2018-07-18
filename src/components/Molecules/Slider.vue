@@ -3,7 +3,7 @@
     <div class="panel-body">
         <h4 :class="labelColor">{{label}}</h4>
         <input 
-            class="image-adjust__input" 
+            :class="sliderStyles" 
             @change="changed" 
             type="range" 
             min="-100" 
@@ -11,7 +11,7 @@
             value="0" 
             :disabled="isImageLoaded === false"
         />
-        <Label description=labelDescription />
+        <Label :description=labelDescription />
     </div>     
 </div>
 </template>
@@ -24,11 +24,32 @@ export default {
   components: {
     Label,
   },
-  props: ['labelColor', 'label', 'sliderChangeFunc', 'isImageLoaded','labelDescription'],
+  props: ['labelColor', 'sliderStyles', 'label', 'sliderChangeFunc', 'isImageLoaded','labelDescription'],
   methods: {
     changed(event) {
-        console.log(this.isImageLoaded)
-        this.$emit("sliderChangeFunc",event.target.value);
+        const vm = this;
+        console.log(vm.isImageLoaded)
+        const val = event.target.value;
+        let transformVal = val/2;
+        if (transformVal < 0){
+            transformVal *= -1;
+            transformVal = 50 - transformVal;
+        } else {
+            transformVal += 50;
+        }
+        transformVal = transformVal/100;
+        console.log(transformVal);
+
+        const sliderColor = vm.sliderStyles === 'image-adjust__input-contrast' ? '#4a90e2' : '#26a95b';
+        $("."+vm.sliderStyles).css('background-image',
+        '-webkit-gradient(linear, left top, right top, '
+        + 'color-stop(' + transformVal + ','+ sliderColor + '), '
+        + 'color-stop(' + transformVal + ', #c8ead6)'
+        + ')'
+        );
+
+        // emit changes to parent component
+        this.$emit("sliderChangeFunc", val);
     }
   }
 }
@@ -45,13 +66,52 @@ export default {
     padding-top: 1rem;
     padding-bottom: 0.1rem;
 }
-.image-adjust__input{
-    width: 80%;
-}
 .brightness {
     color: #26a95b;
 }
 .contrast {
     color: #4a90e2;
 }
+
+/* styling the slider */
+input[type="range"]{
+    width: 80%;
+    -webkit-appearance: none;
+    -moz-apperance: none;
+    border-radius: 6px;
+    height: 6px;
+}
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    border-radius: 50%;
+    border: 2px solid white;
+    height: 18px;
+    width: 18px;
+}
+input.image-adjust__input-brightness[type="range"]{
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.5, #26a95b),
+        color-stop(0.5, #c8ead6)
+    );
+}
+input.image-adjust__input-contrast[type="range"]{
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.5, #4a90e2),
+        color-stop(0.5, #c8ead6)
+    );
+}
+input.image-adjust__input-brightness[type='range']::-webkit-slider-thumb {
+    background-color: #26a95b;
+}
+input.image-adjust__input-contrast[type='range']::-webkit-slider-thumb {
+    background-color: #4a90e2;
+}
+
+
 </style>
