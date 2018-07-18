@@ -10,36 +10,20 @@
             <img src="../../assets/my-face.png">
         </div>
     </div>
-    <div class="panel">
-        <div class="panel-body">
-            <h4 class="brightness">Brightness</h4>
-            <input 
-                class="image-adjust__brightness" 
-                @change="adjustBrightness" 
-                type="range" 
-                min="-100" 
-                max="100" 
-                value="0" 
-                :disabled="isImageLoaded === false"
-            />
-            <Label description="Slide to adjust image brightness!"/>
-        </div>     
-    </div>
-    <div class="panel">
-        <div class="panel-body">
-            <h4 class="contrast">Contrast</h4>
-            <input 
-                class="image-adjust__contrast" 
-                @change="adjustContrast" 
-                type="range" 
-                min="-100" 
-                max="100" 
-                value="0" 
-                :disabled="isImageLoaded === false"
-            />
-            <Label description="Slide to adjust image contrast!"/>
-        </div>    
-    </div>
+    <Slider 
+        labelColor='brightness'
+        label='Brightness'
+        @sliderChangeFunc="adjustBrightness"
+        imageLoaded=isImageLoaded
+        labelDescription="Slide to adjust image brightness!"
+    />
+    <Slider 
+        labelColor='contrast'
+        label='Contrast'
+        @sliderChangeFunc="adjustContrast"
+        imageLoaded=isImageLoaded
+        labelDescription="Slide to adjust image contrast!"
+    />
     <div class="canvas-input">
         <canvas 
             class="image-input__canvas"
@@ -70,12 +54,14 @@
 <script>
 import Label from '../Atoms/Label.vue'
 import Header from '../Atoms/Header.vue'
+import Slider from '../Molecules/Slider.vue'
 
 export default {
   name: 'ImageEditor',
   components: {
     Label,
     Header,
+    Slider,
   },
   props: ['id','width','height','filename'],
   data () {
@@ -112,7 +98,7 @@ export default {
         let data = newImgData.data;
         //apply current brightness 
         const brightness = parseFloat(vm.brightnessLevel) || 0;
-        for (var i=0;i<data.length;i+=4) {
+        for (let i=0;i<data.length;i+=4) {
             data[i] += brightness;
             data[i + 1] += brightness;
             data[i + 2] += brightness;
@@ -120,23 +106,23 @@ export default {
         //apply current contrast
         const contrastValue = (vm.contrastLevel/100) + 1;  //convert to decimal & shift range: [0..2]
         const intercept = 128 * (1 - contrastValue);
-        for(var i=0;i<data.length;i+=4){   //r,g,b,a
-            data[i] = data[i]*contrastValue + intercept;
-            data[i+1] = data[i+1]*contrastValue + intercept;
-            data[i+2] = data[i+2]*contrastValue + intercept;
+        for(let j=0;j<data.length;j+=4){   //r,g,b,a
+            data[j] = data[j]*contrastValue + intercept;
+            data[j+1] = data[j+1]*contrastValue + intercept;
+            data[j+2] = data[j+2]*contrastValue + intercept;
         }
         //change image
         vm.ctx.putImageData(newImgData, 0, 0);
     }, 
 
-    adjustBrightness(event){
+    adjustBrightness(value){
         const vm = this;
-        vm.brightnessLevel = event.target.value;
+        vm.brightnessLevel = value;
         vm.pixelManipulation();
     },
-    adjustContrast(event){
+    adjustContrast(value){
         const vm = this;
-        vm.contrastLevel = event.target.value;
+        vm.contrastLevel = value;
         vm.pixelManipulation();
     },
     triggerInput: function(event) {
@@ -254,27 +240,5 @@ div .img-editor{
     width: 100%;
     height: 100%;
     cursor: pointer;
-}
-.panel {
-    padding: 1rem;
-}
-.panel-body {
-    border: 1px;
-    border-radius: 5px;
-    box-shadow: 3px 3px 15px #888888;
-    padding-top: 1rem;
-    padding-bottom: 0.1rem;
-}
-.image-adjust__brightness {
-    width: 80%;
-}
-.brightness {
-    color: #26a95b;
-}
-.image-adjust__contrast {
-    width: 80%;
-}
-.contrast {
-    color: #4a90e2;
 }
 </style>
