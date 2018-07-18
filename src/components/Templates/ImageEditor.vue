@@ -35,8 +35,8 @@
         </canvas> 
         <div class="row canvas-input__upload">
             <div class="list-group list-group-horizontal">
-                <div class="list-group-item grey">Name</div>
-                <div class="list-group-item truncate">{{filename}}</div>
+                <div class="list-group-item label-name grey">Name</div>
+                <div class="list-group-item filename truncate">{{filename}}</div>
             </div>
 
             <button class="btn btn-upload grey" @click="triggerInput">
@@ -187,6 +187,12 @@ p {
 	border-top-right-radius:4px;
 	border-bottom-left-radius:0;
 }
+.label-name {
+    color: #a6b1c0;
+}
+.filename {
+    color: #5bbb78;
+}
 .truncate {
     width: 120px;
     white-space: nowrap;
@@ -197,6 +203,7 @@ p {
     background-color: #f6f8fa;
 }
 .btn-upload {
+    color: #5c9de5;
     border: 1px solid #dcdcdc;
 }
 .canvas-input {
