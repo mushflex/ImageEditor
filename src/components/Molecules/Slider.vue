@@ -9,7 +9,7 @@
             min="-100" 
             max="100" 
             value="0" 
-            :disabled="imageLoaded === false"
+            :disabled="isImageLoaded === false"
         />
         <Label description=labelDescription />
     </div>     
@@ -24,9 +24,10 @@ export default {
   components: {
     Label,
   },
-  props: ['labelColor', 'label', 'sliderChangeFunc', 'imageLoaded','labelDescription'],
+  props: ['labelColor', 'label', 'sliderChangeFunc', 'isImageLoaded','labelDescription'],
   methods: {
     changed(event) {
+        console.log(this.isImageLoaded)
         this.$emit("sliderChangeFunc",event.target.value);
     }
   }

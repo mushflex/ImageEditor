@@ -14,14 +14,14 @@
         labelColor='brightness'
         label='Brightness'
         @sliderChangeFunc="adjustBrightness"
-        imageLoaded=isImageLoaded
+        :isImageLoaded="isImageLoaded"
         labelDescription="Slide to adjust image brightness!"
     />
     <Slider 
         labelColor='contrast'
         label='Contrast'
         @sliderChangeFunc="adjustContrast"
-        imageLoaded=isImageLoaded
+        :isImageLoaded="isImageLoaded"
         labelDescription="Slide to adjust image contrast!"
     />
     <div class="canvas-input">
