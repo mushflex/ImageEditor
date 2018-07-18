@@ -49,11 +49,11 @@
         </canvas> 
         <div class="row canvas-input__upload">
             <div class="list-group list-group-horizontal">
-                <div class="list-group-item">Name</div>
+                <div class="list-group-item grey">Name</div>
                 <div class="list-group-item truncate">{{filename}}</div>
             </div>
 
-            <button class="btn btn-upload" @click="triggerInput">
+            <button class="btn btn-upload grey" @click="triggerInput">
                 Upload
             </button>
             <input 
@@ -87,6 +87,8 @@ export default {
         canvas: null,
         img: null, 
         originalImgData: null,
+        contrastLevel: 0,
+        brightnessLevel: 0,
     }
   },
   mounted: function(){
@@ -104,36 +106,38 @@ export default {
         newImgData.data.set(originalData);
         return newImgData;
     },
+    pixelManipulation(){
+        const vm = this;
+        let newImgData = vm.copyImageData();
+        let data = newImgData.data;
+        //apply current brightness 
+        const brightness = parseFloat(vm.brightnessLevel) || 0;
+        for (var i=0;i<data.length;i+=4) {
+            data[i] += brightness;
+            data[i + 1] += brightness;
+            data[i + 2] += brightness;
+        }
+        //apply current contrast
+        const contrastValue = (vm.contrastLevel/100) + 1;  //convert to decimal & shift range: [0..2]
+        const intercept = 128 * (1 - contrastValue);
+        for(var i=0;i<data.length;i+=4){   //r,g,b,a
+            data[i] = data[i]*contrastValue + intercept;
+            data[i+1] = data[i+1]*contrastValue + intercept;
+            data[i+2] = data[i+2]*contrastValue + intercept;
+        }
+        //change image
+        vm.ctx.putImageData(newImgData, 0, 0);
+    }, 
 
     adjustBrightness(event){
         const vm = this;
-        
-        let newImgData = vm.copyImageData();
-        let data = newImgData.data;
-        const brightnessValue = parseFloat(event.target.value) || 0;
-
-        for (var i=0;i<data.length;i+=4) {
-            data[i] += brightnessValue;
-            data[i + 1] += brightnessValue;
-            data[i + 2] += brightnessValue;
-        }
-        vm.ctx.putImageData(newImgData, 0, 0);
+        vm.brightnessLevel = event.target.value;
+        vm.pixelManipulation();
     },
     adjustContrast(event){
         const vm = this;
-        let contrastValue = event.target.value
-        let newImgData = vm.copyImageData();
-        let data = newImgData.data;
-
-        contrastValue *= 2.55; // or *= 255 / 100; scale integer percent to full range
-        const factor = (255 + contrastValue) / (255.01 - contrastValue);  //add .1 to avoid /0 error
-
-        for(var i=0;i<data.length;i+=4)  {
-            data[i] = factor * (data[i] - 128) + 128;     //r value
-            data[i+1] = factor * (data[i+1] - 128) + 128; //g value
-            data[i+2] = factor * (data[i+2] - 128) + 128; //b value
-        }
-        vm.ctx.putImageData(newImgData, 0, 0);
+        vm.contrastLevel = event.target.value;
+        vm.pixelManipulation();
     },
     triggerInput: function(event) {
       event.preventDefault();
@@ -177,6 +181,7 @@ p {
     flex-direction: row;
     margin-left: 4px;
 }
+
 .list-group-horizontal .list-group-item {
     display: inline-block;
     margin-bottom: 0;
@@ -200,7 +205,9 @@ p {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+.grey {
+    background-color: #f6f8fa;
+}
 .btn-upload {
     border: 1px solid #dcdcdc;
 }
@@ -208,7 +215,7 @@ p {
     border: 1px solid #b5a8a0;
     padding-bottom: 0.5rem;
     border-radius: 5px;
-    margin: 0.5rem;
+    margin: 1rem;
 }
 .canvas-input__upload {
     display: flex;
@@ -249,13 +256,13 @@ div .img-editor{
     cursor: pointer;
 }
 .panel {
-    padding: 0.5rem;
+    padding: 1rem;
 }
 .panel-body {
     border: 1px;
     border-radius: 5px;
     box-shadow: 3px 3px 15px #888888;
-    padding-top: 0.5rem;
+    padding-top: 1rem;
     padding-bottom: 0.1rem;
 }
 .image-adjust__brightness {
