@@ -16,7 +16,7 @@
         label='Brightness'
         @sliderChangeFunc="adjustBrightness"
         :isImageLoaded="isImageLoaded"
-        labelDescription="Slide to adjust image brightness!"
+        labelDescription="Slide to adjust image brightness! ☀️"
     />
     <Slider 
         labelColor='contrast'
@@ -24,7 +24,7 @@
         label='Contrast'
         @sliderChangeFunc="adjustContrast"
         :isImageLoaded="isImageLoaded"
-        labelDescription="Slide to adjust image contrast!"
+        labelDescription="Slide to adjust image contrast! 🌗"
     />
     <div class="canvas-input">
         <canvas 
@@ -38,10 +38,7 @@
                 <div class="list-group-item label-name grey">Name</div>
                 <div class="list-group-item filename truncate">{{filename}}</div>
             </div>
-
-            <button class="btn btn-upload grey" @click="triggerInput">
-                Upload
-            </button>
+            <UploadButton @callbackFunc="triggerInput" />
             <input 
                 @change="onFileSelected" 
                 class="image-input__input" 
@@ -56,6 +53,7 @@
 <script>
 import Label from '../Atoms/Label.vue'
 import Header from '../Atoms/Header.vue'
+import UploadButton from '../Atoms/UploadButton.vue'
 import Slider from '../Molecules/Slider.vue'
 
 export default {
@@ -64,6 +62,7 @@ export default {
     Label,
     Header,
     Slider,
+    UploadButton,
   },
   props: ['id','width','height','filename'],
   data () {
@@ -127,8 +126,7 @@ export default {
         vm.contrastLevel = value;
         vm.pixelManipulation();
     },
-    triggerInput: function(event) {
-      event.preventDefault();
+    triggerInput() {
       this.$refs.fileInput.click();
     },
     onFileSelected(event){
@@ -202,10 +200,6 @@ p {
 .grey {
     background-color: #f6f8fa;
 }
-.btn-upload {
-    color: #5c9de5;
-    border: 1px solid #dcdcdc;
-}
 .canvas-input {
     border: 1px solid #b5a8a0;
     padding-bottom: 0.5rem;
@@ -215,6 +209,8 @@ p {
 .canvas-input__upload {
     display: flex;
     justify-content: space-around;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 .avatar {
     display: flex;

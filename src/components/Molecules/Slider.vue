@@ -28,7 +28,6 @@ export default {
   methods: {
     changed(event) {
         const vm = this;
-        console.log(vm.isImageLoaded)
         const val = event.target.value;
         let transformVal = val/2;
         if (transformVal < 0){
@@ -38,14 +37,13 @@ export default {
             transformVal += 50;
         }
         transformVal = transformVal/100;
-        console.log(transformVal);
 
         const sliderColor = vm.sliderStyles === 'image-adjust__input-contrast' ? '#4a90e2' : '#26a95b';
         $("."+vm.sliderStyles).css('background-image',
-        '-webkit-gradient(linear, left top, right top, '
-        + 'color-stop(' + transformVal + ','+ sliderColor + '), '
-        + 'color-stop(' + transformVal + ', #c8ead6)'
-        + ')'
+            '-webkit-gradient(linear, left top, right top, '
+            + 'color-stop(' + transformVal + ','+ sliderColor + '), '
+            + 'color-stop(' + transformVal + ', #c8ead6)'
+            + ')'
         );
 
         // emit changes to parent component
