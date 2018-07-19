@@ -26,6 +26,7 @@ export default {
   },
   props: ['labelColor', 'sliderStyles', 'label', 'sliderChangeFunc', 'isImageLoaded','labelDescription'],
   methods: {
+    /* eslint-disable */
     changed(event) {
         const vm = this;
         const val = event.target.value;
