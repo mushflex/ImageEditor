@@ -20,37 +20,44 @@
 import Label from '../Atoms/Label.vue'
 
 export default {
-  name: 'Slider',
-  components: {
-    Label,
-  },
-  props: ['labelColor', 'sliderStyles', 'label', 'sliderChangeFunc', 'isImageLoaded','labelDescription'],
-  methods: {
-    /* eslint-disable */
-    changed(event) {
-        const vm = this;
-        const val = event.target.value;
-        let transformVal = val/2;
-        if (transformVal < 0){
-            transformVal *= -1;
-            transformVal = 50 - transformVal;
-        } else {
-            transformVal += 50;
+    name: 'Slider',
+    components: {
+        Label,
+    },
+    props: [
+        'labelColor', 
+        'sliderStyles', 
+        'label', 
+        'sliderChangeFunc', 
+        'isImageLoaded',
+        'labelDescription'
+    ],
+    methods: {
+        /* eslint-disable */
+        changed(event) {
+            const vm = this;
+            const val = event.target.value;
+            let transformVal = val/2;
+            if (transformVal < 0){
+                transformVal *= -1;
+                transformVal = 50 - transformVal;
+            } else {
+                transformVal += 50;
+            }
+            transformVal = transformVal/100;
+
+            const sliderColor = vm.sliderStyles === 'image-adjust__input-contrast' ? '#4a90e2' : '#26a95b';
+            $("."+vm.sliderStyles).css('background-image',
+                '-webkit-gradient(linear, left top, right top, '
+                + 'color-stop(' + transformVal + ','+ sliderColor + '), '
+                + 'color-stop(' + transformVal + ', #c8ead6)'
+                + ')'
+            );
+
+            // emit changes to parent component
+            this.$emit("sliderChangeFunc", val);
         }
-        transformVal = transformVal/100;
-
-        const sliderColor = vm.sliderStyles === 'image-adjust__input-contrast' ? '#4a90e2' : '#26a95b';
-        $("."+vm.sliderStyles).css('background-image',
-            '-webkit-gradient(linear, left top, right top, '
-            + 'color-stop(' + transformVal + ','+ sliderColor + '), '
-            + 'color-stop(' + transformVal + ', #c8ead6)'
-            + ')'
-        );
-
-        // emit changes to parent component
-        this.$emit("sliderChangeFunc", val);
     }
-  }
 }
 </script>
 
